@@ -1,8 +1,12 @@
 import tkinter as tk
+from idlelib import window
 from tkinter import *
 from tkinter import filedialog
 from tkinter import ttk
 import pandas as pd
+from matplotlib.backends._backend_tk import NavigationToolbar2Tk
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
+from matplotlib.figure import Figure
 
 
 class StatsTab(ttk.Frame):
@@ -74,16 +78,32 @@ class StatsTab(ttk.Frame):
 class Plots(ttk.Frame):
     def __init__(self, master):
         super().__init__(master)
-
+        self.canvas= None
         self.df = None
         self.frame = ttk.Frame.__init__(self, master)
-        tk.Label(self, text="Plots", font=('bold')).pack()
+
+         #
+
+        #
 
     def set_data_frame(self, df):
-        if not self.df:
-            self.table_frame.pack()
-
         self.df = df
         self.column_names = df.columns.values.tolist()
+        self.create_plot()
+    def create_plot(self):
+        tk.Label(self, text="Plots", font=('bold')).pack()
 
+        fig = Figure(figsize=(6, 6), dpi=100)
+        y = [self.df.loc[:, "pH"].min(), self.df.loc[:, "pH"].max()]
+
+        x = [1, 2]
+
+
+        plot1 = fig.add_subplot(111)
+        plot1.plot(y)
+        self.canvas = FigureCanvasTkAgg(fig, master=self)
+        self.canvas.draw()
+        toolbar = NavigationToolbar2Tk(self.canvas, self)
+        toolbar.update()
+        self.canvas.get_tk_widget().pack()
 

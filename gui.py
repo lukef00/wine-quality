@@ -80,7 +80,7 @@ class App(tk.Frame):
         DATASET = pd.read_csv(filename, sep=";")
         self.status.set("Dataset loaded", '#00ff00')
         self.statistics.set_data_frame(DATASET)
-
+        self.plots.set_data_frame(DATASET)
 
 
 
