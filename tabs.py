@@ -7,6 +7,8 @@ import pandas as pd
 
 class StatsTab(ttk.Frame):
     def __init__(self, master):
+        super().__init__(master)
+
         self.df = None
         self.frame = ttk.Frame.__init__(self, master)
         tk.Label(self, text="Stats Page", font=('bold')).pack()
@@ -65,3 +67,23 @@ class StatsTab(ttk.Frame):
         scrollbar.config(command=self.tree.yview)
 
         self.tree.pack()
+
+
+
+
+class Plots(ttk.Frame):
+    def __init__(self, master):
+        super().__init__(master)
+
+        self.df = None
+        self.frame = ttk.Frame.__init__(self, master)
+        tk.Label(self, text="Plots", font=('bold')).pack()
+
+    def set_data_frame(self, df):
+        if not self.df:
+            self.table_frame.pack()
+
+        self.df = df
+        self.column_names = df.columns.values.tolist()
+
+

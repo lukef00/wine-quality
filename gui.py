@@ -52,13 +52,12 @@ class App(tk.Frame):
     def create_tabs(self, master):
         self.tabController = ttk.Notebook(master)
         self.statistics = tabs.StatsTab(self.tabController)
+        self.plots = tabs.Plots(self.tabController)
         # TODO: change lines below into classes and place them in tabs.py,
-        self.plots = ttk.Frame(self.tabController)
-        self.model = ttk.Frame(self.tabController)
 
         self.tabController.add(self.statistics, text="Statistical data")
         self.tabController.add(self.plots, text="Plots")
-        self.tabController.add(self.model, text="Model")
+     #   self.tabController.add(self.model, text="Model")
 
         self.tabController.pack(expand = 1, fill='both')
 
@@ -67,7 +66,7 @@ class App(tk.Frame):
         master.bind('<Control-o>', self.load_dataset)
 
 
-    def load_dataset(self, event):
+    def load_dataset(self, event = None):
         filetypes = (
                 ('csv', '*.csv'),
                 ('text files', '*.txt'),
