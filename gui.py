@@ -53,11 +53,12 @@ class App(tk.Frame):
         self.tabController = ttk.Notebook(master)
         self.statistics = tabs.StatsTab(self.tabController)
         self.plots = tabs.Plots(self.tabController)
+        self.export = tabs.ExportTab(self.tabController)
         # TODO: change lines below into classes and place them in tabs.py,
 
         self.tabController.add(self.statistics, text="Statistical data")
         self.tabController.add(self.plots, text="Plots")
-     #   self.tabController.add(self.model, text="Model")
+        self.tabController.add(self.export, text="Export")
 
         self.tabController.pack(expand = 1, fill='both')
 
@@ -81,9 +82,11 @@ class App(tk.Frame):
         self.status.set("Dataset loaded", '#00ff00')
         self.statistics.set_data_frame(DATASET)
         self.plots.set_data_frame(DATASET)
+        self.export.set_data_frame(DATASET)
 
 
 
 root = tk.Tk()
+root.geometry("800x600")
 myapp = App(root)
 myapp.mainloop()

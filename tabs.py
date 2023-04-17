@@ -107,3 +107,39 @@ class Plots(ttk.Frame):
         toolbar.update()
         self.canvas.get_tk_widget().pack()
 
+
+class ExportTab(ttk.Frame):
+    def __init__(self, master):
+        super().__init__(master)
+
+        self.df = None
+        self.boxes = dict()
+        self.frame = ttk.Frame.__init__(self, master)
+        tk.Label(self, text="Export Page", font=('bold')).pack()
+
+    def set_data_frame(self, df):
+        self.df = df
+        self.column_names = df.columns.values.tolist()
+        self.prepare_checkboxes()
+
+
+    def prepare_checkboxes(self):
+        for col in self.column_names:
+            self.boxes[col] = tk.IntVar()
+            self.boxes[col].set(1)
+            ttk.Checkbutton(self,
+                            text=col,
+                            command=None,
+                            variable=self.boxes[col],
+                            ).pack(side = tk.LEFT)
+
+        tk.Button(self, text="Export", command=self.exportData).pack()
+
+    def exportData(self):
+        columns_to_drop = []
+        for key in self.boxes.keys():
+            if self.boxes[key].get() == 0:
+                columns_to_drop.append(key)
+
+        new_df = self.df.drop(columns=columns_to_drop)
+        new_df.to_csv('export.csv', index = False, mode = 'w+')
