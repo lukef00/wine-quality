@@ -7,7 +7,7 @@ import pandas as pd
 from matplotlib.backends._backend_tk import NavigationToolbar2Tk
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from matplotlib.figure import Figure
-
+import matplotlib.pyplot as plt
 
 class StatsTab(ttk.Frame):
     def __init__(self, master):
@@ -91,16 +91,32 @@ class Plots(ttk.Frame):
         self.column_names = df.columns.values.tolist()
         self.create_plot()
     def create_plot(self):
-        tk.Label(self, text="Plots", font=('bold')).pack()
 
+        #self.boxes2 = dict()
+       # for col in self.column_names:
+         #   self.boxes2[col] = tk.IntVar()
+          #  self.boxes2[col].set(1)
+           # ttk.Checkbutton(self,
+            #                text=col,
+             #               command=None,
+              #              variable=self.boxes2[col],
+               #             ).pack()
+
+
+        xname="pH"
+        yname="quality"
+
+        tk.Label(self, text="wykres "+xname +" od "+yname, font=('bold')).pack()
         fig = Figure(figsize=(6, 6), dpi=100)
-        y = [self.df.loc[:, "pH"].min(), self.df.loc[:, "pH"].max()]
 
-        x = [1, 2]
-
-
+        x = [x for x in self.df.loc[:, xname]]
+        y = [x for x in self.df.loc[:, yname]]
+        print(y)
+        print(x)
         plot1 = fig.add_subplot(111)
-        plot1.plot(y)
+        plot1.scatter(y,x)
+        plot1.set_ylabel(yname)
+        plot1.set_xlabel(xname)
         self.canvas = FigureCanvasTkAgg(fig, master=self)
         self.canvas.draw()
         toolbar = NavigationToolbar2Tk(self.canvas, self)
