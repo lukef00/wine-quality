@@ -1,8 +1,11 @@
 import tkinter as tk
+from functools import partial
 from idlelib import window
 from tkinter import *
 from tkinter import filedialog
 from tkinter import ttk
+
+import label as label
 import pandas as pd
 from matplotlib.backends._backend_tk import NavigationToolbar2Tk
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
@@ -82,15 +85,37 @@ class Plots(ttk.Frame):
         self.df = None
         self.frame = ttk.Frame.__init__(self, master)
 
-         #
 
-        #
+
 
     def set_data_frame(self, df):
         self.df = df
         self.column_names = df.columns.values.tolist()
         self.create_plot()
     def create_plot(self):
+
+
+        def show():
+            label.config(text=clicked.get())
+
+        options = [
+            "fix_acid",
+            "vol_acid",
+            "cit_acid",
+            "res_sugar",
+            "chlorides",
+            "fsd",
+            "tsd",
+            "dens",
+            "pH",
+            "sulp",
+            "alco"
+        ]
+        clicked = StringVar()
+        clicked.set("fix_acid")
+
+        drop = OptionMenu(self.frame, clicked, *options)
+        drop.pack()
 
         #self.boxes2 = dict()
        # for col in self.column_names:
@@ -103,10 +128,11 @@ class Plots(ttk.Frame):
                #             ).pack()
 
 
-        xname="pH"
-        yname="quality"
 
-        tk.Label(self, text="wykres "+xname +" od "+yname, font=('bold')).pack()
+        xname=clicked.get()
+        yname="score"
+
+        #  tk.Label(self, text="wykres "+xname +" od "+yname, font=('bold')).pack()
         fig = Figure(figsize=(6, 6), dpi=100)
 
         x = [x for x in self.df.loc[:, xname]]
@@ -114,14 +140,37 @@ class Plots(ttk.Frame):
         print(y)
         print(x)
         plot1 = fig.add_subplot(111)
-        plot1.scatter(y,x)
+        plot1.scatter(x,y)
         plot1.set_ylabel(yname)
         plot1.set_xlabel(xname)
+        plot1.set_title("graph showing the dependence  of "+xname +" on "+yname)
+
         self.canvas = FigureCanvasTkAgg(fig, master=self)
         self.canvas.draw()
         toolbar = NavigationToolbar2Tk(self.canvas, self)
         toolbar.update()
         self.canvas.get_tk_widget().pack()
+
+
+        def clearPlot(self,plot1):
+            print(clicked.get())
+            xname = clicked.get()
+            yname = "score"
+
+            x = [x for x in self.df.loc[:, xname]]
+            y = [x for x in self.df.loc[:, yname]]
+            plot1.clear()
+            plot1.set_title("graph showing the dependence  of " + xname + " on " + yname)
+            plot1.scatter(x,y)
+            plot1.set_ylabel(yname)
+            plot1.set_xlabel(xname)
+
+            self.canvas.draw()
+
+        ttk.Button(self.frame, text="Change Plot", command= lambda: clearPlot(self,plot1) ).pack(pady=1)
+
+
+
 
 
 class ExportTab(ttk.Frame):

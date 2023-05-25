@@ -52,7 +52,7 @@ class App(tk.Frame):
     def create_tabs(self, master):
         self.tabController = ttk.Notebook(master)
         self.statistics = tabs.StatsTab(self.tabController)
-        self.plots = tabs.Plots(self.tabController)
+        self.plots = tabs.  Plots(self.tabController)
         self.export = tabs.ExportTab(self.tabController)
         # TODO: change lines below into classes and place them in tabs.py,
 
