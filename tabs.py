@@ -4,6 +4,7 @@ from idlelib import window
 from tkinter import *
 from tkinter import filedialog
 from tkinter import ttk
+from tkinter.filedialog import asksaveasfile
 
 import label as label
 import pandas as pd
@@ -24,7 +25,7 @@ class StatsTab(ttk.Frame):
 
     def set_data_frame(self, df):
         if not self.df:
-           self.table_frame.pack()
+            self.table_frame.pack()
 
         self.df = df
         self.column_names = df.columns.values.tolist()
@@ -99,35 +100,23 @@ class Plots(ttk.Frame):
             label.config(text=clicked.get())
 
         options = [
-            "fix_acid",
-            "vol_acid",
-            "cit_acid",
-            "res_sugar",
-            "chlorides",
-            "fsd",
-            "tsd",
-            "dens",
-            "pH",
-            "sulp",
-            "alco"
-        ]
+                "fix_acid",
+                "vol_acid",
+                "cit_acid",
+                "res_sugar",
+                "chlorides",
+                "fsd",
+                "tsd",
+                "dens",
+                "pH",
+                "sulp",
+                "alco"
+                ]
         clicked = StringVar()
         clicked.set("fix_acid")
 
         drop = OptionMenu(self.frame, clicked, *options)
         drop.pack()
-
-        #self.boxes2 = dict()
-       # for col in self.column_names:
-         #   self.boxes2[col] = tk.IntVar()
-          #  self.boxes2[col].set(1)
-           # ttk.Checkbutton(self,
-            #                text=col,
-             #               command=None,
-              #              variable=self.boxes2[col],
-               #             ).pack()
-
-
 
         xname=clicked.get()
         yname="score"
@@ -137,8 +126,6 @@ class Plots(ttk.Frame):
 
         x = [x for x in self.df.loc[:, xname]]
         y = [x for x in self.df.loc[:, yname]]
-        print(y)
-        print(x)
         plot1 = fig.add_subplot(111)
         plot1.scatter(x,y)
         plot1.set_ylabel(yname)
@@ -153,7 +140,6 @@ class Plots(ttk.Frame):
 
 
         def clearPlot(self,plot1):
-            print(clicked.get())
             xname = clicked.get()
             yname = "score"
 
@@ -189,22 +175,26 @@ class ExportTab(ttk.Frame):
 
 
     def prepare_checkboxes(self):
-        for col in self.column_names:
+        grid_frame = tk.Frame(self)
+        grid_frame.pack()
+        for i, col in enumerate(self.column_names):
             self.boxes[col] = tk.IntVar()
             self.boxes[col].set(1)
-            ttk.Checkbutton(self,
+            ttk.Checkbutton(grid_frame,
                             text=col,
                             command=None,
                             variable=self.boxes[col],
-                            ).pack(side = tk.LEFT)
+                            ).grid(row = i // 3, column= i % 3, sticky= 'w', padx=10, pady=10)
 
         tk.Button(self, text="Export", command=self.exportData).pack()
 
     def exportData(self):
+        files = [('CSV', '*.csv')]
+        file = asksaveasfile(filetypes = files, defaultextension = files)
         columns_to_drop = []
         for key in self.boxes.keys():
             if self.boxes[key].get() == 0:
                 columns_to_drop.append(key)
 
         new_df = self.df.drop(columns=columns_to_drop)
-        new_df.to_csv('export.csv', index = False, mode = 'w+')
+        new_df.to_csv(file, index = False, mode = 'w+')
