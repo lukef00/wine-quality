@@ -114,12 +114,15 @@ class Plots(ttk.Frame):
                 ]
         clicked = StringVar()
         clicked.set("fix_acid")
+        clicked2 = StringVar()
+        clicked2.set("pH")
 
         drop = OptionMenu(self.frame, clicked, *options)
         drop.pack()
-
+        drop2 = OptionMenu(self.frame, clicked2, *options)
+        drop2.pack();
         xname=clicked.get()
-        yname="score"
+        yname=clicked2.get()
 
         #  tk.Label(self, text="wykres "+xname +" od "+yname, font=('bold')).pack()
         fig = Figure(figsize=(6, 6), dpi=100)
@@ -141,7 +144,7 @@ class Plots(ttk.Frame):
 
         def clearPlot(self,plot1):
             xname = clicked.get()
-            yname = "score"
+            yname = clicked2.get()
 
             x = [x for x in self.df.loc[:, xname]]
             y = [x for x in self.df.loc[:, yname]]
