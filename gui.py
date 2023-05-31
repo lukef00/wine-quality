@@ -52,13 +52,15 @@ class App(tk.Frame):
     def create_tabs(self, master):
         self.tabController = ttk.Notebook(master)
         self.statistics = tabs.StatsTab(self.tabController)
-        self.plots = tabs.  Plots(self.tabController)
+        self.plots = tabs.Plots(self.tabController)
         self.export = tabs.ExportTab(self.tabController)
+        self.correlation = tabs.Correlation(self.tabController)
         # TODO: change lines below into classes and place them in tabs.py,
 
         self.tabController.add(self.statistics, text="Statistical data")
         self.tabController.add(self.plots, text="Plots")
         self.tabController.add(self.export, text="Export")
+        self.tabController.add(self.correlation, text="Correlation")
 
         self.tabController.pack(expand = 1, fill='both')
 
@@ -83,7 +85,7 @@ class App(tk.Frame):
         self.statistics.set_data_frame(DATASET)
         self.plots.set_data_frame(DATASET)
         self.export.set_data_frame(DATASET)
-
+        self.correlation.set_data_frame(DATASET)
 
 
 root = tk.Tk()

@@ -76,7 +76,29 @@ class StatsTab(ttk.Frame):
 
         self.tree.pack()
 
+class Correlation(ttk.Frame):
+    def __init__(self, master):
+        super().__init__(master)
+        self.df = None
+        self.frame = ttk.Frame.__init__(self, master)
+        tk.Label(self, text="Correlation", font=('bold')).pack()
+        self.prepare_correlation_table()
+    def set_data_frame(self, df):
+        self.df = df
+        self.column_names = df.columns.values.tolist()
+        self.correlation()
 
+    def correlation(self):
+
+        tk.Label(self, text="test", font=('bold')).pack()
+        data=self.df.corr(method='pearson')
+        print(data)
+
+    def prepare_correlation_table(self):
+        print("debug")
+        #self.table_frame = Frame(self)
+        #columns =("fix_acid","vol_acid","cit_acid","res_sugar","chlorides","fsd","tsd","dens","pH","sulp","alco","score")
+        #tree = ttk.Treeview( self.table_frame, columns=columns, show='headings')
 
 
 class Plots(ttk.Frame):
