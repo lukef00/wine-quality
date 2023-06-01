@@ -87,7 +87,6 @@ class Correlation(ttk.Frame):
         self.prepare_correlation_table()
 
     def prepare_correlation_table(self):
-        print("debug")
         self.table_frame = Frame(self)
         columns =("column","fix_acid","vol_acid","cit_acid","res_sugar","chlorides","fsd","tsd","dens","pH","sulp","alco","score")
         self.tree = ttk.Treeview(self, columns=columns, show='headings')
