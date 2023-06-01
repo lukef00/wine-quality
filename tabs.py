@@ -105,10 +105,14 @@ class Correlation(ttk.Frame):
         data = self.df.corr(method='pearson')
 
         print(data)
-        print(data.iloc[[0]])
+        print(data.iloc[0,0])
+        column_headers = list(data.columns.values)
+        print(column_headers)
+        for i in range(12):
+            self.tree.insert("", 'end',values=(column_headers[i], "{:.3f}".format(data.iloc[i,0]),"{:.3f}".format(data.iloc[i,1]),"{:.3f}".format(data.iloc[i,2]),"{:.3f}".format(data.iloc[i,3]),"{:.3f}".format(data.iloc[i,4]),"{:.3f}".format(data.iloc[i,5]),"{:.3f}".format(data.iloc[i,6]),"{:.3f}".format(data.iloc[i,7]),"{:.3f}".format(data.iloc[i,8]),"{:.3f}".format(data.iloc[i,9]),"{:.3f}".format(data.iloc[i,10]),"{:.3f}".format(data.iloc[i,11])         ))
 
-        self.tree.insert("", 'end', iid=1,values=(data.iloc[[0]]))
-        self.tree.insert("", 'end', iid=2, values=(data.iloc[[1]]))
+
+
 
 
 class Plots(ttk.Frame):
