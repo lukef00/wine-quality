@@ -73,7 +73,6 @@ class StatsTab(ttk.Frame):
         self.tree.column('column', width = 150, anchor = 'w')
         self.tree.column('standard deviation', width = 150)
         scrollbar.config(command=self.tree.yview)
-
         self.tree.pack()
 
 class Correlation(ttk.Frame):
@@ -82,23 +81,34 @@ class Correlation(ttk.Frame):
         self.df = None
         self.frame = ttk.Frame.__init__(self, master)
         tk.Label(self, text="Correlation", font=('bold')).pack()
-        self.prepare_correlation_table()
     def set_data_frame(self, df):
         self.df = df
         self.column_names = df.columns.values.tolist()
-        self.correlation()
-
-    def correlation(self):
-
-        tk.Label(self, text="test", font=('bold')).pack()
-        data=self.df.corr(method='pearson')
-        print(data)
+        self.prepare_correlation_table()
 
     def prepare_correlation_table(self):
         print("debug")
-        #self.table_frame = Frame(self)
-        #columns =("fix_acid","vol_acid","cit_acid","res_sugar","chlorides","fsd","tsd","dens","pH","sulp","alco","score")
-        #tree = ttk.Treeview( self.table_frame, columns=columns, show='headings')
+        self.table_frame = Frame(self)
+        columns =("column","fix_acid","vol_acid","cit_acid","res_sugar","chlorides","fsd","tsd","dens","pH","sulp","alco","score")
+        self.tree = ttk.Treeview(self, columns=columns, show='headings')
+        for col in self.tree['columns']:
+            self.tree.heading(col, text = col)
+            self.tree.column(col, width = 80, anchor = 'e')
+
+        self.tree.column('column', width = 150, anchor = 'w')
+
+
+        self.tree.column('score', width = 150)
+
+        self.tree.pack()
+
+        data = self.df.corr(method='pearson')
+
+        print(data)
+        print(data.iloc[[0]])
+
+        self.tree.insert("", 'end', iid=1,values=(data.iloc[[0]]))
+        self.tree.insert("", 'end', iid=2, values=(data.iloc[[1]]))
 
 
 class Plots(ttk.Frame):
@@ -139,10 +149,7 @@ class Plots(ttk.Frame):
         clicked2 = StringVar()
         clicked2.set("pH")
 
-        drop = OptionMenu(self.frame, clicked, *options)
-        drop.pack()
-        drop2 = OptionMenu(self.frame, clicked2, *options)
-        drop2.pack();
+
         xname=clicked.get()
         yname=clicked2.get()
 
@@ -178,9 +185,12 @@ class Plots(ttk.Frame):
 
             self.canvas.draw()
 
-        ttk.Button(self.frame, text="Change Plot", command= lambda: clearPlot(self,plot1) ).pack(pady=1)
+        drop = OptionMenu(self, clicked, *options)
+        drop.pack()
+        drop2 = OptionMenu(self, clicked2, *options)
+        drop2.pack();
 
-
+        ttk.Button(self, text="Change Plot", command= lambda: clearPlot(self,plot1) ).pack(pady=1)
 
 
 
