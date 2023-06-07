@@ -1,4 +1,5 @@
 import tkinter as tk
+import re
 from functools import partial
 from idlelib import window
 from tkinter import *
@@ -224,15 +225,33 @@ class ExportTab(ttk.Frame):
                             variable=self.boxes[col],
                             ).grid(row = i // 3, column= i % 3, sticky= 'w', padx=10, pady=10)
 
+        self.regex_box = tk.Entry(self)
+        self.regex_box.pack()
         tk.Button(self, text="Export", command=self.exportData).pack()
 
     def exportData(self):
         files = [('CSV', '*.csv')]
         file = asksaveasfile(filetypes = files, defaultextension = files)
+        items = self.regex_box.get().split(" ")
+        rows = []
+        if len(items) > 0:
+            for item in items:
+                if re.match('^\d+-\d+$', item):
+                    # range
+                    temp = [int(x) for x in item.split('-')]
+                    for x in list(range(temp[0], temp[1] + 1)):
+                        rows.append(x)
+                elif re.match('^\d+$', item):
+                    rows.append(int(item))
+
+
         columns_to_drop = []
         for key in self.boxes.keys():
             if self.boxes[key].get() == 0:
                 columns_to_drop.append(key)
 
         new_df = self.df.drop(columns=columns_to_drop)
+        if len(rows):
+            print(rows)
+            new_df = new_df.iloc[rows]
         new_df.to_csv(file, index = False, mode = 'w+')
