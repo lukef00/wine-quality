@@ -13,7 +13,8 @@ from matplotlib.backends._backend_tk import NavigationToolbar2Tk
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from matplotlib.figure import Figure
 import matplotlib.pyplot as plt
-
+import numpy as np
+import seaborn as sns
 class StatsTab(ttk.Frame):
     def __init__(self, master):
         super().__init__(master)
@@ -86,6 +87,13 @@ class Correlation(ttk.Frame):
         self.df = df
         self.column_names = df.columns.values.tolist()
         self.prepare_correlation_table()
+        tk.Button(self, text="Open correlation heatmap in new window", command=lambda: self.createHeatmap()).pack(pady=1)
+
+    def createHeatmap(self):
+        data = self.df.corr(method='pearson')
+        sns.set()
+        ax = sns.heatmap(data,annot=True, vmin=(-1), vmax=1)
+        plt.show()
 
     def prepare_correlation_table(self):
         self.table_frame = Frame(self)
